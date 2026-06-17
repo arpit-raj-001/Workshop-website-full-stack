@@ -1,0 +1,8 @@
+node_modules/
+.env
+
+# don't commit actual uploaded files, just keep the folders
+uploads/photos/*
+uploads/videos/*
+!uploads/photos/.gitkeep
+!uploads/videos/.gitkeep
