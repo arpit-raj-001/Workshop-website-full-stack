@@ -8,7 +8,7 @@ const sequelize = require("./config/db"); // Our MySQL database connection manag
 require("./models"); // This will load our Database Tables (User, BootcampPost)
 
 const authRoutes = require('./routes/authRoutes'); // Routes related to logging in
-// const bootcampRoutes = require('./routes/bootcampRoutes'); // Routes for uploading/fetching posts
+const bootcampRoutes = require('./routes/bootcampRoutes'); // Routes for uploading/fetching posts
 
 const app = express();
 app.use(cors());
@@ -19,7 +19,7 @@ app.use(passport.initialize()); // We will uncomment this when we build the auth
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use('/auth', authRoutes);
-// app.use('/api/bootcamp', bootcampRoutes);
+app.use('/api/bootcamp', bootcampRoutes);
 
 // just testing
 app.get("/", (req, res) => {
