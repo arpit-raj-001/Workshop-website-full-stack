@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
-// const passport = require('./config/passport'); // Handles Google OAuth login
+const passport = require('./config/passport'); // Handles Google OAuth login
 const sequelize = require("./config/db"); // Our MySQL database connection manager
 require("./models"); // This will load our Database Tables (User, BootcampPost)
 
@@ -13,7 +13,7 @@ require("./models"); // This will load our Database Tables (User, BootcampPost)
 const app = express();
 app.use(cors());
 app.use(express.json());
-// app.use(passport.initialize()); // We will uncomment this when we build the authentication layer.
+app.use(passport.initialize()); // We will uncomment this when we build the authentication layer.
 
 // If someone goes to http://localhost:5000/uploads/photos/photo.jpg, express apna uploads folder dekhega
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
