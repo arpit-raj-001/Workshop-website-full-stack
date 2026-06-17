@@ -31,7 +31,7 @@ const PORT = process.env.PORT || 5000; // abhi ke liuye local pe rkh rha , baad 
 // Because you installed MySQL, we can now connect to it!
 // sequelize.sync() connects to the DB and creates the tables automatically if they don't exist.
 sequelize
-  .sync()
+  .sync({ alter: true })
   .then(() => {
     console.log("dbms connected");
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

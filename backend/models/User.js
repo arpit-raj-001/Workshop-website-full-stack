@@ -19,7 +19,7 @@ const User = sequelize.define("User", {
     unique: true,
   },
 
-  pfp: {
+  avatar: {
     type: DataTypes.STRING,
   },
 

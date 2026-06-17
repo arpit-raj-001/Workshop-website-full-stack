@@ -13,22 +13,24 @@ exports.googleCallback = (req, res) => {
     { expiresIn: "30d" },
   );
 
-  res.json({
-    message: "Login successful",
-    token: token,
-    user: {
-      id: req.user.id,
-      name: req.user.name,
-      email: req.user.email,
-      avatar: req.user.avatar,
-      role: req.user.role,
-    },
-  });
+  //redirect to react app , and pass token in url
+  res.redirect(`http://localhost:5173/login?token=${token}`);
 };
 
-exports.getMe = (req, res) => {
-  res.json({
-    message: "You are authenticated",
-    user: req.user,
-  });
+exports.getMe = async (req, res) => {
+  try {
+    const { User } = require("../models");
+    const user = await User.findByPk(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "You are authenticated",
+      user: user,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user data" });
+  }
 };
