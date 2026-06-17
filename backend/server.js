@@ -7,7 +7,7 @@ const passport = require('./config/passport'); // Handles Google OAuth login
 const sequelize = require("./config/db"); // Our MySQL database connection manager
 require("./models"); // This will load our Database Tables (User, BootcampPost)
 
-// const authRoutes = require('./routes/authRoutes'); // Routes related to logging in
+const authRoutes = require('./routes/authRoutes'); // Routes related to logging in
 // const bootcampRoutes = require('./routes/bootcampRoutes'); // Routes for uploading/fetching posts
 
 const app = express();
@@ -18,7 +18,7 @@ app.use(passport.initialize()); // We will uncomment this when we build the auth
 // If someone goes to http://localhost:5000/uploads/photos/photo.jpg, express apna uploads folder dekhega
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// app.use('/auth', authRoutes);
+app.use('/auth', authRoutes);
 // app.use('/api/bootcamp', bootcampRoutes);
 
 // just testing
