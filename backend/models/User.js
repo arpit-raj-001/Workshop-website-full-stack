@@ -23,6 +23,11 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
   },
 
+  bio: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+
   designation: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -35,6 +40,11 @@ const User = sequelize.define("User", {
 
   instagram: {
     type: DataTypes.STRING,
+    allowNull: true,
+  },
+
+  lastLogin: {
+    type: DataTypes.DATE,
     allowNull: true,
   },
 

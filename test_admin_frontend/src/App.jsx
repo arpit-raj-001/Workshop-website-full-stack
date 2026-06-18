@@ -11,22 +11,9 @@ import UploadForm from "./components/UploadForm";
 
 import ManagePosts from "./components/ManagePosts";
 import AuditHistory from "./components/AuditHistory";
-
-const Students = () => (
-  <div style={{ color: "#fff", padding: "2rem" }}>
-    <h2>Students</h2>
-  </div>
-);
-const Doubts = () => (
-  <div style={{ color: "#fff", padding: "2rem" }}>
-    <h2>Solve Doubts</h2>
-  </div>
-);
-const Profile = () => (
-  <div style={{ color: "#fff", padding: "2rem" }}>
-    <h2>Admin Profile </h2>
-  </div>
-);
+import Students from "./components/Students";
+import Doubts from "./components/Doubts";
+import Profile from "./components/Profile";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");

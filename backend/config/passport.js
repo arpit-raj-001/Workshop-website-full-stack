@@ -34,9 +34,11 @@ passport.use(
             email: email,
             avatar: profile.photos[0] ? profile.photos[0].value : null,
             role: assignedRole,
+            lastLogin: new Date()
           });
         } else {
           user.role = assignedRole;
+          user.lastLogin = new Date();
           await user.save();
         }
 
