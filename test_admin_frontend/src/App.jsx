@@ -10,12 +10,8 @@ import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import UploadForm from "./components/UploadForm";
 
 import ManagePosts from "./components/ManagePosts";
+import AuditHistory from "./components/AuditHistory";
 
-const AuditHistory = () => (
-  <div style={{ color: "#fff", padding: "2rem" }}>
-    <h2>Audit History</h2>
-  </div>
-);
 const Students = () => (
   <div style={{ color: "#fff", padding: "2rem" }}>
     <h2>Students</h2>

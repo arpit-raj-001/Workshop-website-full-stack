@@ -9,6 +9,7 @@ require("./models"); // This will load our Database Tables (User, BootcampPost)
 
 const authRoutes = require('./routes/authRoutes'); // Routes related to logging in
 const bootcampRoutes = require('./routes/bootcampRoutes'); // Routes for uploading/fetching posts
+const auditRoutes = require('./routes/auditRoutes'); // Routes for audit history logs
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use('/auth', authRoutes);
 app.use('/api/bootcamp', bootcampRoutes);
+app.use('/api/audit', auditRoutes);
 
 // just testing
 app.get("/", (req, res) => {

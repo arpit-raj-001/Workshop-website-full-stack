@@ -1,4 +1,4 @@
-const { BootcampPost, User } = require("../models");
+const { BootcampPost, User, AuditLog } = require("../models");
 
 exports.getAllPosts = async (req, res) => {
   try {
@@ -30,6 +30,17 @@ exports.createMessage = async (req, res) => {
       tags: tags || [],
       pollOptions: pollOptions || [],
       createdBy: req.user.id, //abhi ke liye demo id
+    });
+
+    const optionsCount = pollOptions ? (Array.isArray(pollOptions) ? pollOptions.length : JSON.parse(pollOptions).length) : 0;
+    const details = optionsCount > 0 
+      ? `Created a new ${newPost.type} titled "${newPost.title}" with ${optionsCount} poll option(s)`
+      : `Created a new ${newPost.type} titled "${newPost.title}"`;
+
+    await AuditLog.create({
+      action: "CREATE",
+      details,
+      adminId: req.user.id
     });
 
     res.status(201).json(newPost);
@@ -80,6 +91,12 @@ exports.uploadMedia = async (req, res) => {
       createdBy: req.user.id, // abhi ke liye demo
     });
 
+    await AuditLog.create({
+      action: "CREATE",
+      details: `Uploaded a new ${newPost.type} titled "${newPost.title}" with ${mediaUrls.length} file(s)`,
+      adminId: req.user.id
+    });
+
     res.status(201).json(newPost);
   } catch (error) {
     res
@@ -96,6 +113,12 @@ exports.deletePost = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
+
+    await AuditLog.create({
+      action: "DELETE",
+      details: `Deleted ${post.type} titled "${post.title}"`,
+      adminId: req.user.id
+    });
 
     await post.destroy();
     res.json({ message: "deleted post" });
@@ -115,22 +138,51 @@ exports.updatePost = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    if (title !== undefined) post.title = title;
-    if (content !== undefined) post.content = content;
+    let changes = [];
+
+    if (title !== undefined && post.title !== title) {
+      changes.push(`Changed title from "${post.title}" to "${title}"`);
+      post.title = title;
+    }
+    if (content !== undefined && post.content !== content) {
+      changes.push(`Updated content`);
+      post.content = content;
+    }
 
     if (tags !== undefined) {
+      let parsedTags = [];
       try {
-        post.tags = JSON.parse(tags);
+        parsedTags = JSON.parse(tags);
       } catch (e) {
-        post.tags = typeof tags === "string" ? tags.split(",") : tags;
+        parsedTags = typeof tags === "string" ? tags.split(",") : tags;
+      }
+      
+      const oldTags = post.tags || [];
+      if (JSON.stringify(oldTags) !== JSON.stringify(parsedTags)) {
+        changes.push(`Updated tags from [${oldTags.join(', ')}] to [${parsedTags.join(', ')}]`);
+        post.tags = parsedTags;
       }
     }
 
     if (pollOptions !== undefined) {
+      let parsedOptions = [];
       try {
-        post.pollOptions = JSON.parse(pollOptions);
+        parsedOptions = JSON.parse(pollOptions);
       } catch (e) {
-        post.pollOptions = pollOptions;
+        parsedOptions = pollOptions;
+      }
+
+      const oldOptions = post.pollOptions || [];
+      if (JSON.stringify(oldOptions) !== JSON.stringify(parsedOptions)) {
+        const added = parsedOptions.filter(o => !oldOptions.includes(o)).length;
+        const removed = oldOptions.filter(o => !parsedOptions.includes(o)).length;
+        
+        if (added > 0 || removed > 0) {
+           changes.push(`Updated poll options (+${added} added, -${removed} removed)`);
+        } else {
+           changes.push(`Edited poll options`);
+        }
+        post.pollOptions = parsedOptions;
       }
     }
 
@@ -138,10 +190,21 @@ exports.updatePost = async (req, res) => {
       const mediaUrls = req.files.map(
         (file) => `/uploads/${post.type}s/${file.filename}`,
       );
+      changes.push(`Uploaded ${req.files.length} new file(s)`);
       post.mediaUrl = mediaUrls;
     }
 
     await post.save();
+
+    if (changes.length > 0) {
+      const detailsString = `Edited ${post.type} (ID: ${post.id}):\n` + changes.map(c => `• ${c}`).join('\n');
+      
+      await AuditLog.create({
+        action: "UPDATE",
+        details: detailsString,
+        adminId: req.user.id
+      });
+    }
 
     res.json({ message: "Post updated", post });
   } catch (error) {
