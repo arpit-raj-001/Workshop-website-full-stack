@@ -4,11 +4,12 @@ const crypto = require("crypto");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // front end form me se ek field name le lena file ke liye
     if (file.fieldname === "photo") {
       cb(null, "uploads/photos/");
     } else if (file.fieldname === "video") {
       cb(null, "uploads/videos/");
+    } else if (file.fieldname === "assignment") {
+      cb(null, "uploads/assignments/");
     } else {
       cb(null, "uploads/");
     }

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
   const authHeader = req.headers.authorization; //req and next will be given by frontend , res is middleware output
+  
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res
       .status(401)
@@ -17,7 +18,7 @@ const auth = (req, res, next) => {
   try {
     //to verify ki koi tampering nhi hui he token ke saath , we will compare with jwt token , agar valid hua tom user detail le lenge aur aage badhenge toward destination route
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = decoded; // The user object (including ID and Role) will now be attached
     next();
   } catch (err) {
     //fake token , expired token , tampered token

@@ -5,7 +5,10 @@ html {
   width: 100%;
   height: 100%;
   font-family: "Inter", sans-serif;
+  /* Prevent scrolling if we add floating elements that go slightly out of bounds */
   overflow: hidden;
+  /* Globally scale the entire application down to mimic 80% browser zoom */
+  font-size: 80%;
 }
 
 #root {

@@ -23,6 +23,21 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
   },
 
+  designation: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+
+  linkedin: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+
+  instagram: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+
   role: {
     type: DataTypes.ENUM("admin", "user"),
     defaultValue: "user",

@@ -5,10 +5,33 @@ import {
   Navigate,
 } from "react-router-dom";
 import Login from "./components/Login";
-import Dashboard from "./components/Dashboard";
-import "./App.css";
+import AdminLayout from "./components/AdminLayout";
+import AnalyticsDashboard from "./components/AnalyticsDashboard";
+import UploadForm from "./components/UploadForm";
 
-//local storage se token nikaal ke check krenge if admin or not , if not then login
+import ManagePosts from "./components/ManagePosts";
+
+const AuditHistory = () => (
+  <div style={{ color: "#fff", padding: "2rem" }}>
+    <h2>Audit History</h2>
+  </div>
+);
+const Students = () => (
+  <div style={{ color: "#fff", padding: "2rem" }}>
+    <h2>Students</h2>
+  </div>
+);
+const Doubts = () => (
+  <div style={{ color: "#fff", padding: "2rem" }}>
+    <h2>Solve Doubts</h2>
+  </div>
+);
+const Profile = () => (
+  <div style={{ color: "#fff", padding: "2rem" }}>
+    <h2>Admin Profile </h2>
+  </div>
+);
+
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -17,26 +40,32 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        {/* upar jo component bnaya he admin check krne ke liye wo us krenge , dashboard ko uske around wrap kar do  */}
+        {/* Protected Admin Routes */}
         <Route
           path="/"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <AdminLayout />
             </ProtectedRoute>
           }
-        />
-
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        >
+          <Route index element={<AnalyticsDashboard />} />
+          <Route path="create-post" element={<UploadForm />} />
+          <Route path="manage-posts" element={<ManagePosts />} />
+          <Route path="audit-history" element={<AuditHistory />} />
+          <Route path="students" element={<Students />} />
+          <Route path="doubts" element={<Doubts />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

@@ -3,7 +3,7 @@ const sequelize = require("../config/db"); //database import krna padega jo db.j
 
 const BootcampPost = sequelize.define("BootcampPost", {
   type: {
-    type: DataTypes.ENUM("photo", "video", "message", "poll"),
+    type: DataTypes.ENUM("photo", "video", "message", "poll", "assignment"),
     allowNull: false,
   },
 
@@ -17,9 +17,19 @@ const BootcampPost = sequelize.define("BootcampPost", {
     allowNull: true,
   },
 
-  //im not storing the video in db as file size can be large , so everything should be stored in /uploads folder , we will use url to fetch from local server
+  // Stores an array of URLs (or a single string for legacy posts)
   mediaUrl: {
-    type: DataTypes.STRING,
+    type: DataTypes.JSON,
+    allowNull: true,
+  },
+
+  tags: {
+    type: DataTypes.JSON,
+    allowNull: true,
+  },
+
+  pollOptions: {
+    type: DataTypes.JSON,
     allowNull: true,
   },
 });

@@ -44,9 +44,9 @@ const Login = () => {
       <div className="mentox-3d-text">MENTOX</div>
 
       <div className="login-card" style={{ zIndex: 1 }}>
-        <h1 className="login-title">Command Center</h1>
+        <h1 className="login-title">Admin Panel</h1>
         <p className="login-subtitle">
-          Secure, authenticated access only for mentox employees
+          Sign in to manage the Bootcamp
         </p>
 
         <button className="login-button" onClick={handleLogin}>

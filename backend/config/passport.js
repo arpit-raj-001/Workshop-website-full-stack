@@ -17,23 +17,26 @@ passport.use(
         let user = await User.findOne({ where: { googleId: profile.id } }); //check if already exist
 
         const adminEmails = process.env.ADMIN_EMAILS
-          ? process.env.ADMIN_EMAILS.split(",")
+          ? process.env.ADMIN_EMAILS.split(",").map((e) =>
+              e.trim().toLowerCase(),
+            )
           : [];
-        const role = adminEmails.includes(email) ? "admin" : "user"; //agar admin email me daala ho to admin bana do
 
-        //new user handling
+        //.env me check karenge ki adminemail he ya ni
+        const assignedRole = adminEmails.includes(email.toLowerCase())
+          ? "admin"
+          : "user";
+
         if (!user) {
           user = await User.create({
             googleId: profile.id,
             name: profile.displayName,
             email: email,
             avatar: profile.photos[0] ? profile.photos[0].value : null,
-            role: role,
+            role: assignedRole,
           });
         } else {
-          //puraane user handling by updating their role
-
-          user.role = role;
+          user.role = assignedRole;
           await user.save();
         }
 

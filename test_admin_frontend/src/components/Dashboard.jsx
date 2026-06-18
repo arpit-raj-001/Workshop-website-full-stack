@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UploadForm from "./UploadForm";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -144,9 +145,10 @@ const Dashboard = () => {
           Welcome back, {(adminData?.name || "Admin").split(" ")[0]}!
         </h1>
         <p style={{ color: "#6b7280", marginBottom: "3rem" }}>
-          This is your command center. Select an option to manage the bootcamp
-          content.
+          Select an option to manage the bootcamp content.
         </p>
+
+        <UploadForm />
 
         {/* baad me post list aur upload form daalenge */}
         <div

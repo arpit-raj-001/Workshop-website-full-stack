@@ -15,7 +15,7 @@ router.post(
   "/photo",
   auth,
   isAdmin,
-  upload.single("photo"),
+  upload.array("photo", 3), // allow up to 3 photos
   bootcampController.uploadMedia,
 );
 
@@ -28,8 +28,23 @@ router.post(
   bootcampController.uploadMedia,
 );
 
+// POST /api/bootcamp/assignment
+router.post(
+  "/assignment",
+  auth,
+  isAdmin,
+  upload.single("assignment"),
+  bootcampController.uploadMedia,
+);
+
 // PUT /api/bootcamp/:id
-router.put("/:id", auth, isAdmin, bootcampController.updatePost);
+router.put(
+  "/:id",
+  auth,
+  isAdmin,
+  upload.any(),
+  bootcampController.updatePost
+);
 
 // DELETE /api/bootcamp/:id
 router.delete("/:id", auth, isAdmin, bootcampController.deletePost);
