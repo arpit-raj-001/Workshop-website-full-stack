@@ -11,6 +11,7 @@ import UploadForm from "./components/UploadForm";
 
 import ManagePosts from "./components/ManagePosts";
 import AuditHistory from "./components/AuditHistory";
+import Submissions from "./components/Submissions";
 import Students from "./components/Students";
 import Doubts from "./components/Doubts";
 import Profile from "./components/Profile";
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="create-post" element={<UploadForm />} />
           <Route path="manage-posts" element={<ManagePosts />} />
           <Route path="audit-history" element={<AuditHistory />} />
+          <Route path="submissions" element={<Submissions />} />
           <Route path="students" element={<Students />} />
           <Route path="doubts" element={<Doubts />} />
           <Route path="profile" element={<Profile />} />

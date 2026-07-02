@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, PlusCircle, Layers, History, Users, HelpCircle, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, Layers, History, Users, HelpCircle, User, LogOut, FileText } from 'lucide-react';
 import './Sidebar.css';
 
 const Sidebar = ({ adminData }) => {
@@ -16,6 +16,7 @@ const Sidebar = ({ adminData }) => {
     { name: 'Create Post', path: '/create-post', icon: <PlusCircle size={20} /> },
     { name: 'Manage Posts', path: '/manage-posts', icon: <Layers size={20} /> },
     { name: 'Audit History', path: '/audit-history', icon: <History size={20} /> },
+    { name: 'Submissions', path: '/submissions', icon: <FileText size={20} /> },
     { name: 'Students', path: '/students', icon: <Users size={20} /> },
     { name: 'Solve Doubts', path: '/doubts', icon: <HelpCircle size={20} /> },
     { name: 'Profile', path: '/profile', icon: <User size={20} /> },
