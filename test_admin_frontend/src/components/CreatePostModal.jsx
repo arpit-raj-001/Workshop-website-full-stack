@@ -249,6 +249,9 @@ const MediaUploadForm = ({ type, onSubmit, isSubmitting }) => {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
   const [files, setFiles] = useState([]);
+  const [deadline, setDeadline] = useState("");
+  const [assignmentId, setAssignmentId] = useState("");
+  const [rollOutDate, setRollOutDate] = useState("");
 
   const handleFileChange = (e) => {
     const selected = Array.from(e.target.files);
@@ -268,7 +271,15 @@ const MediaUploadForm = ({ type, onSubmit, isSubmitting }) => {
     }
     const mediaType =
       type === "Image" ? "photo" : type === "Video" ? "video" : "assignment";
-    onSubmit({ type: mediaType, title, content, tags, files });
+      
+    const postData = { type: mediaType, title, content, tags, files };
+    if (type === "Assignment") {
+      if (deadline) postData.deadline = deadline;
+      if (assignmentId) postData.assignmentId = assignmentId;
+      if (rollOutDate) postData.rollOutDate = rollOutDate;
+    }
+    
+    onSubmit(postData);
   };
 
   return (
@@ -295,6 +306,42 @@ const MediaUploadForm = ({ type, onSubmit, isSubmitting }) => {
           disabled={isSubmitting}
         />
       </div>
+
+      {type === "Assignment" && (
+        <>
+          <div className="form-group">
+            <label>Deadline (Optional)</label>
+            <input
+              type="datetime-local"
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
+              disabled={isSubmitting}
+            />
+          </div>
+          <div className="form-group">
+            <label>Assignment ID (1-20)</label>
+            <input
+              type="number"
+              min="1"
+              max="20"
+              placeholder="e.g. 1"
+              value={assignmentId}
+              onChange={(e) => setAssignmentId(e.target.value)}
+              disabled={isSubmitting}
+            />
+          </div>
+          <div className="form-group">
+            <label>Roll Out Date (Optional)</label>
+            <input
+              type="datetime-local"
+              value={rollOutDate}
+              onChange={(e) => setRollOutDate(e.target.value)}
+              disabled={isSubmitting}
+              title="Leave empty to roll out immediately"
+            />
+          </div>
+        </>
+      )}
 
       <div className="form-group">
         <label>Upload File</label>
@@ -400,6 +447,12 @@ const CreatePostModal = ({ type, onClose }) => {
           postData.files.forEach((f) => {
             formData.append(fieldName, f);
           });
+        }
+        
+        if (postData.type === "assignment") {
+          if (postData.deadline) formData.append("deadline", postData.deadline);
+          if (postData.assignmentId) formData.append("assignmentId", postData.assignmentId);
+          if (postData.rollOutDate) formData.append("rollOutDate", postData.rollOutDate);
         }
 
         const route =

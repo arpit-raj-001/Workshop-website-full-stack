@@ -6,6 +6,10 @@ const BootcampPost = require("./BootcampPost");
 const Doubt = require("./Doubt");
 const AuditLog = require("./AuditLog");
 const AssignmentCompletion = require("./AssignmentCompletion");
+const AssignmentSubmission = require("./AssignmentSubmission");
+const PostComment = require("./PostComment");
+const PostUpvote = require("./PostUpvote");
+const Notification = require("./Notification");
 
 //ek bootcamp post ek hi admin post kr skta , like author of post
 BootcampPost.belongsTo(User, { as: "author", foreignKey: "createdBy" });
@@ -13,12 +17,44 @@ BootcampPost.belongsTo(User, { as: "author", foreignKey: "createdBy" });
 //ek user can create many posts
 User.hasMany(BootcampPost, { foreignKey: "createdBy" });
 
-// assignment track krne ke liye
+// assignment track krne ke liye (legacy)
 User.hasMany(AssignmentCompletion, { foreignKey: "studentId" });
 AssignmentCompletion.belongsTo(User, { foreignKey: "studentId" });
 
 BootcampPost.hasMany(AssignmentCompletion, { foreignKey: "assignmentId" });
 AssignmentCompletion.belongsTo(BootcampPost, { foreignKey: "assignmentId" });
+
+// Assignment Submissions ke liye
+User.hasMany(AssignmentSubmission, { foreignKey: "studentId" });
+AssignmentSubmission.belongsTo(User, { foreignKey: "studentId" });
+BootcampPost.hasMany(AssignmentSubmission, { foreignKey: "postId" });
+AssignmentSubmission.belongsTo(BootcampPost, { foreignKey: "postId" });
+
+// Post Comments
+User.hasMany(PostComment, { foreignKey: "userId" });
+PostComment.belongsTo(User, { foreignKey: "userId" });
+BootcampPost.hasMany(PostComment, { foreignKey: "postId" });
+PostComment.belongsTo(BootcampPost, { foreignKey: "postId" });
+
+// comment thread reply
+PostComment.hasMany(PostComment, { as: "replies", foreignKey: "parentId" });
+PostComment.belongsTo(PostComment, { as: "parent", foreignKey: "parentId" });
+
+// Post Upvotes
+User.hasMany(PostUpvote, { foreignKey: "userId" });
+PostUpvote.belongsTo(User, { foreignKey: "userId" });
+BootcampPost.hasMany(PostUpvote, { foreignKey: "postId" });
+PostUpvote.belongsTo(BootcampPost, { foreignKey: "postId" });
+
+// Notifications
+User.hasMany(Notification, { foreignKey: "userId" });
+Notification.belongsTo(User, { foreignKey: "userId" });
+
+BootcampPost.hasMany(Doubt, { foreignKey: "referencePostId" });
+Doubt.belongsTo(BootcampPost, {
+  as: "ReferencePost",
+  foreignKey: "referencePostId",
+});
 
 module.exports = {
   sequelize,
@@ -27,4 +63,8 @@ module.exports = {
   Doubt,
   AuditLog,
   AssignmentCompletion,
+  AssignmentSubmission,
+  PostComment,
+  PostUpvote,
+  Notification,
 };

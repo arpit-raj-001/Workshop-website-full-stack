@@ -15,6 +15,17 @@ const Doubt = sequelize.define("Doubt", {
     type: DataTypes.ENUM("pending", "resolved"),
     defaultValue: "pending",
   },
+
+  //doubt to post mapping
+
+  referencePostId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: "BootcampPosts",
+      key: "id",
+    },
+  },
 });
 
 User.hasMany(Doubt, { as: "AskedDoubts", foreignKey: "studentId" });

@@ -32,15 +32,20 @@ exports.createMessage = async (req, res) => {
       createdBy: req.user.id, //abhi ke liye demo id
     });
 
-    const optionsCount = pollOptions ? (Array.isArray(pollOptions) ? pollOptions.length : JSON.parse(pollOptions).length) : 0;
-    const details = optionsCount > 0 
-      ? `Created a new ${newPost.type} titled "${newPost.title}" with ${optionsCount} poll option(s)`
-      : `Created a new ${newPost.type} titled "${newPost.title}"`;
+    const optionsCount = pollOptions
+      ? Array.isArray(pollOptions)
+        ? pollOptions.length
+        : JSON.parse(pollOptions).length
+      : 0;
+    const details =
+      optionsCount > 0
+        ? `Created a new ${newPost.type} titled "${newPost.title}" with ${optionsCount} poll option(s)`
+        : `Created a new ${newPost.type} titled "${newPost.title}"`;
 
     await AuditLog.create({
       action: "CREATE",
       details,
-      adminId: req.user.id
+      adminId: req.user.id,
     });
 
     res.status(201).json(newPost);
@@ -65,7 +70,8 @@ exports.uploadMedia = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const { title, type, tags, content } = req.body;
+    const { title, type, tags, content, deadline, assignmentId, rollOutDate } =
+      req.body;
 
     // the url jo hamara student frontend will look for
     // If there's only one file, it can still be an array to support multi-images consistently
@@ -89,12 +95,15 @@ exports.uploadMedia = async (req, res) => {
       mediaUrl: mediaUrls,
       tags: parsedTags,
       createdBy: req.user.id, // abhi ke liye demo
+      deadline: deadline || null,
+      assignmentId: assignmentId ? parseInt(assignmentId, 10) : null,
+      rollOutDate: rollOutDate || null,
     });
 
     await AuditLog.create({
       action: "CREATE",
       details: `Uploaded a new ${newPost.type} titled "${newPost.title}" with ${mediaUrls.length} file(s)`,
-      adminId: req.user.id
+      adminId: req.user.id,
     });
 
     res.status(201).json(newPost);
@@ -117,7 +126,7 @@ exports.deletePost = async (req, res) => {
     await AuditLog.create({
       action: "DELETE",
       details: `Deleted ${post.type} titled "${post.title}"`,
-      adminId: req.user.id
+      adminId: req.user.id,
     });
 
     await post.destroy();
@@ -156,10 +165,12 @@ exports.updatePost = async (req, res) => {
       } catch (e) {
         parsedTags = typeof tags === "string" ? tags.split(",") : tags;
       }
-      
+
       const oldTags = post.tags || [];
       if (JSON.stringify(oldTags) !== JSON.stringify(parsedTags)) {
-        changes.push(`Updated tags from [${oldTags.join(', ')}] to [${parsedTags.join(', ')}]`);
+        changes.push(
+          `Updated tags from [${oldTags.join(", ")}] to [${parsedTags.join(", ")}]`,
+        );
         post.tags = parsedTags;
       }
     }
@@ -174,13 +185,19 @@ exports.updatePost = async (req, res) => {
 
       const oldOptions = post.pollOptions || [];
       if (JSON.stringify(oldOptions) !== JSON.stringify(parsedOptions)) {
-        const added = parsedOptions.filter(o => !oldOptions.includes(o)).length;
-        const removed = oldOptions.filter(o => !parsedOptions.includes(o)).length;
-        
+        const added = parsedOptions.filter(
+          (o) => !oldOptions.includes(o),
+        ).length;
+        const removed = oldOptions.filter(
+          (o) => !parsedOptions.includes(o),
+        ).length;
+
         if (added > 0 || removed > 0) {
-           changes.push(`Updated poll options (+${added} added, -${removed} removed)`);
+          changes.push(
+            `Updated poll options (+${added} added, -${removed} removed)`,
+          );
         } else {
-           changes.push(`Edited poll options`);
+          changes.push(`Edited poll options`);
         }
         post.pollOptions = parsedOptions;
       }
@@ -197,12 +214,14 @@ exports.updatePost = async (req, res) => {
     await post.save();
 
     if (changes.length > 0) {
-      const detailsString = `Edited ${post.type} (ID: ${post.id}):\n` + changes.map(c => `• ${c}`).join('\n');
-      
+      const detailsString =
+        `Edited ${post.type} (ID: ${post.id}):\n` +
+        changes.map((c) => `• ${c}`).join("\n");
+
       await AuditLog.create({
         action: "UPDATE",
         details: detailsString,
-        adminId: req.user.id
+        adminId: req.user.id,
       });
     }
 

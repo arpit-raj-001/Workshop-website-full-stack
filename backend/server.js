@@ -12,6 +12,7 @@ const bootcampRoutes = require("./routes/bootcampRoutes");
 const auditRoutes = require("./routes/auditRoutes");
 const userRoutes = require("./routes/userRoutes");
 const doubtRoutes = require("./routes/doubtRoutes");
+const submissionRoutes = require("./routes/submissionRoutes");
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -19,12 +20,14 @@ app.use(passport.initialize()); // We will uncomment this when we build the auth
 
 // If someone goes to http://localhost:5000/uploads/photos/photo.jpg, express apna uploads folder dekhega
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/studentuploads", express.static(path.join(__dirname, "studentuploads")));
 
 app.use("/auth", authRoutes);
 app.use("/api/bootcamp", bootcampRoutes);
 app.use("/api/audit", auditRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/doubts", doubtRoutes);
+app.use("/api/submissions", submissionRoutes);
 
 // just testing
 app.get("/", (req, res) => {

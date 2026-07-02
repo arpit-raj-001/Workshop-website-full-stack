@@ -17,7 +17,6 @@ const BootcampPost = sequelize.define("BootcampPost", {
     allowNull: true,
   },
 
-  // Stores an array of URLs (or a single string for legacy posts)
   mediaUrl: {
     type: DataTypes.JSON,
     allowNull: true,
@@ -31,6 +30,26 @@ const BootcampPost = sequelize.define("BootcampPost", {
   pollOptions: {
     type: DataTypes.JSON,
     allowNull: true,
+  },
+
+  deadline: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+
+  assignmentId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    validate: {
+      min: 1,
+      max: 20,
+    },
+  },
+
+  rollOutDate: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: DataTypes.NOW,
   },
 });
 
