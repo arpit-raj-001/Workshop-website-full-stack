@@ -8,6 +8,4 @@ test_admin_frontend/dist/
 test_admin_frontend/dist-ssr/
 *.local
 .DS_Store
-.gemini/
-DESIGN.md
-PRODUCT.md
+

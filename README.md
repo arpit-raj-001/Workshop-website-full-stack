@@ -73,7 +73,6 @@ Admins can perform full CRUD operations on bootcamp posts via `BootcampControlle
 ![Video Upload](product_photos/3.0_uploading_media_VIDEO.mp4)
 
 ![Manage Posts](product_photos/4.0_manage_post_section.png)
-![Edit Post](product_photos/4.1_manage_post_EDITING_POST.png)
 
 ---
 
